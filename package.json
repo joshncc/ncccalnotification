@@ -1,0 +1,6 @@
+{
+  "name": "calendly-slack-webhook",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {}
+}
