@@ -1,7 +1,6 @@
 // /api/calendly.js
 
 import pino from 'pino';
-import fetch from 'node-fetch'; // Add this line for Node.js environments < 18
 
 const logger = pino();
 
@@ -43,14 +42,17 @@ export default async function handler(req, res) {
   };
 
   try {
-    await fetch(process.env.SLACK_WEBHOOK_URL, {
+    const response = await fetch(process.env.SLACK_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(slackMessage),
     });
 
-    logger.info({ name, startTime }, 'Slack notification sent successfully');
+    if (!response.ok) {
+      throw new Error(`Slack responded with status ${response.status}`);
+    }
 
+    logger.info({ name, startTime }, 'Slack notification sent successfully');
     return res.status(200).send('Notification sent to Slack.');
   } catch (err) {
     logger.error({ err }, 'Failed to send Slack notification');
