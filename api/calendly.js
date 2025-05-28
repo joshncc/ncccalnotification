@@ -1,24 +1,41 @@
+// /api/calendly.js
+
+import { createLogger } from 'pino';
+
+const logger = createLogger();
+
 export default async function handler(req, res) {
+  logger.info({ method: req.method, url: req.url }, 'Incoming request');
+
   if (req.method !== 'POST') {
+    logger.warn('Method not allowed');
     return res.status(405).send('Method not allowed');
   }
 
-  const { payload } = req.body;
+  const event = req.body;
+  const payload = event.payload;
 
-  if (!payload) return res.status(400).send('Missing payload');
+  if (!payload?.invitee || !payload?.event) {
+    logger.error({ payload }, 'Missing payload or invitee/event data');
+    return res.status(400).send('Missing payload or invitee/event data');
+  }
 
   const invitee = payload.invitee;
-  const event = payload.event;
+  const calendlyEvent = payload.event;
 
   const name = invitee.name;
   const email = invitee.email;
-  const startTime = new Date(event.start_time).toLocaleString('en-AU', {
-    timeZone: event.location.timezone || 'Australia/Sydney',
+
+  logger.info({ name, email }, 'Processing Calendly event');
+
+  const startTime = new Date(calendlyEvent.start_time).toLocaleString('en-AU', {
+    timeZone: calendlyEvent.location?.timezone || 'Australia/Sydney',
     dateStyle: 'full',
-    timeStyle: 'short'
+    timeStyle: 'short',
   });
 
-  const zoomLink = invitee.join_url || event.location.join_url || 'Zoom link not available';
+  const zoomLink =
+    invitee.join_url || calendlyEvent.location?.join_url || 'Zoom link not available';
 
   const slackMessage = {
     text: `📅 *New Appointment Booked*\n*Name:* ${name}\n*Time:* ${startTime}\n🔗 *Zoom:* ${zoomLink}`,
@@ -31,9 +48,11 @@ export default async function handler(req, res) {
       body: JSON.stringify(slackMessage),
     });
 
+    logger.info({ name, startTime }, 'Slack notification sent successfully');
+
     return res.status(200).send('Notification sent to Slack.');
   } catch (err) {
-    console.error(err);
+    logger.error({ err }, 'Failed to send Slack notification');
     return res.status(500).send('Error sending Slack notification.');
   }
 }
