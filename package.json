@@ -1,11 +1,19 @@
 {
   "name": "calendly-slack-webhook",
   "version": "1.0.0",
+  "description": "A webhook that listens to Calendly events and posts notifications to Slack",
+  "main": "index.js",
   "type": "module",
+  "scripts": {
+    "start": "node api/calendly.js",
+    "dev": "nodemon api/calendly.js"
+  },
   "dependencies": {
     "pino": "^9.7.0"
   },
   "devDependencies": {
     "pino-pretty": "^13.0.0"
-  }
+  },
+  "author": "",
+  "license": "MIT"
 }
