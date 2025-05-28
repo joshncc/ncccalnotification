@@ -1,6 +1,7 @@
 // /api/calendly.js
 
 import pino from 'pino';
+import fetch from 'node-fetch'; // Add this line for Node.js environments < 18
 
 const logger = pino();
 
@@ -38,7 +39,7 @@ export default async function handler(req, res) {
     invitee.join_url || calendlyEvent.location?.join_url || 'Zoom link not available';
 
   const slackMessage = {
-    text: 📅 *New Appointment Booked*\n*Name:* ${name}\n*Time:* ${startTime}\n🔗 *Zoom:* ${zoomLink},
+    text: `📅 *New Appointment Booked*\n*Name:* ${name}\n*Time:* ${startTime}\n🔗 *Zoom:* ${zoomLink}`,
   };
 
   try {
