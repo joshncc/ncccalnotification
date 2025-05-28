@@ -1,8 +1,8 @@
 // /api/calendly.js
 
-import { createLogger } from 'pino';
+import pino from 'pino';
 
-const logger = createLogger();
+const logger = pino();
 
 export default async function handler(req, res) {
   logger.info({ method: req.method, url: req.url }, 'Incoming request');
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
     invitee.join_url || calendlyEvent.location?.join_url || 'Zoom link not available';
 
   const slackMessage = {
-    text: `📅 *New Appointment Booked*\n*Name:* ${name}\n*Time:* ${startTime}\n🔗 *Zoom:* ${zoomLink}`,
+    text: 📅 *New Appointment Booked*\n*Name:* ${name}\n*Time:* ${startTime}\n🔗 *Zoom:* ${zoomLink},
   };
 
   try {
