@@ -4,7 +4,7 @@
   "description": "A webhook that listens to Calendly events and posts notifications to Slack",
   "type": "module",
   "scripts": {
-    "start": "vercel dev",            // Use Vercel's dev for local testing
+    "start": "vercel dev",
     "dev": "vercel dev"
   },
   "dependencies": {
@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "pino-pretty": "^13.0.0",
-    "nodemon": "^3.0.1"              // Add nodemon if you want it for local development
+    "nodemon": "^3.0.1"
   },
   "author": "",
   "license": "MIT"
