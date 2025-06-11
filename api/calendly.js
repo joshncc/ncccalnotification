@@ -27,7 +27,7 @@ export default async function handler(req, res) {
   logger.info({ name, email }, 'Processing Calendly event');
   
   const startTime = new Date(calendlyEvent.start_time).toLocaleString('en-AU', {
-    timeZone: payload.timezone || 'Australia/Sydney',
+    timeZone: 'Australia/Sydney',
     dateStyle: 'full',
     timeStyle: 'short',
   });
